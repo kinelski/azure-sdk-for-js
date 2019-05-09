@@ -1,8 +1,39 @@
-import fs from "fs";
-import nock from "nock";
+//import fs from "fs";
+//import nock from "nock";
 import { getUniqueName } from "../utils";
+import { Polly } from "@pollyjs/core";
+// @ts-ignore
+import XHRAdapter from "@pollyjs/adapter-xhr";
+import FSPersister from "@pollyjs/persister-fs";
+import { MODES } from "@pollyjs/utils";
 import * as dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
+
+Polly.register(XHRAdapter);
+Polly.register(FSPersister);
+
+export function record(_folderpath: string, _testTitle?: string) {
+  const polly = new Polly("super_name", {
+    mode: MODES.RECORD,
+    adapters: ["xhr"],
+    persister: "fs",
+    matchRequestsBy: {
+      headers: false
+    }
+  });
+
+  polly.connectTo("xhr");
+
+  return {
+    stop: function() {
+      polly.disconnectFrom("xhr");
+    },
+
+    getUniqueName: function(_: string, __?: string) {
+      return getUniqueName(_);
+    }
+  };
+}
 
 /**
  * Possible reasons for skipping a test:
@@ -11,6 +42,7 @@ dotenv.config({ path: "../../.env" });
  * * Tempfile: the request makes use of a random tempfile created locally, and the recorder does not support recording it as unique information
  * * UUID: a UUID is randomly generated within the SDK and used in an HTTP request, resulting in Nock being unable to recognize it
 */
+/*
 const skip: any = [
 ];
 
@@ -93,3 +125,4 @@ export function record(this: any, folderpath: string, testTitle?: string): { [ke
     }
   };
 }
+*/

@@ -30,7 +30,7 @@ describe("MessageIdURL", function() {
     recorder.stop();
   });
 
-  it("update and delete empty message with default parameters", async () => {
+  it.only("update and delete empty message with default parameters", async () => {
     let messagesURL = MessagesURL.fromQueueURL(queueURL);
     let eResult = await messagesURL.enqueue(Aborter.none, messageContent);
     assert.ok(eResult.date);
