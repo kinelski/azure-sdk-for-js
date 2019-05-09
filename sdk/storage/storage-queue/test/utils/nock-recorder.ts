@@ -31,6 +31,10 @@ export function record(_folderpath: string, _testTitle?: string) {
 
     getUniqueName: function(_: string, __?: string) {
       return getUniqueName(_);
+    },
+
+    newDate: function(_: string) {
+      return new Date();
     }
   };
 }
