@@ -1,18 +1,14 @@
-import fs from "fs";
 import nise from "nise";
 import { getUniqueName } from "../utils";
 import { isBrowser } from "./testutils.common";
 import * as dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
 
+let fs: any;
 let nock: any;
 if (!isBrowser()) {
+  fs = require("fs");
   nock = require("nock");
-}
-
-function writeFileInBrowser(_filename: string, _obj: any) {
-  // TODO (printing for evaluation purposes)
-  console.log(JSON.stringify(_obj));
 }
 
 function readFileInBrowser(_filename: string): any {
@@ -64,7 +60,7 @@ function nockRecorder(folderpath: string, testTitle: string) {
     stop: function() {
       let fixtures = nock.recorder.play();
       let file = fs.createWriteStream("./recordings/node/" + fp, { flags: "w" });
-      file.on("error", err => console.log(err));
+      file.on("error", (err: any) => console.log(err));
       file.write(importNock + "\n" + "module.exports.testInfo = " + JSON.stringify(uniqueTestInfo) + "\n");
       for (let i = 0; i < fixtures.length; i++) {
         file.write(fixtures[i] + "\n");
@@ -130,7 +126,7 @@ function niseRecorder(folderpath: string, testTitle: string) {
     },
     playback: function() {
       xhr = nise.fakeXhr.useFakeXMLHttpRequest();
-      [recordings, uniqueTestInfo] = readFileInBrowser("./recordings/browser/" + fp);
+      [recordings, uniqueTestInfo] = readFileInBrowser("./recordings/browsers/" + fp);
 
       xhr.onCreate = function(req: any) {
         const reqSend = req.send;
@@ -161,10 +157,10 @@ function niseRecorder(folderpath: string, testTitle: string) {
       }
     },
     stop: function() {
-      writeFileInBrowser("./recordings/browser/" + fp, {
-        recordings: recordings,
-        uniqueTestInfo: uniqueTestInfo
-      });
+      console.log(JSON.stringify({
+        name: "./recordings/browsers/" + fp,
+        object: { recordings: recordings, uniqueTestInfo: uniqueTestInfo }
+      }));
       xhr.restore();
     }
   };

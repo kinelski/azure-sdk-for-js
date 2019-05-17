@@ -21,7 +21,8 @@ module.exports = function(config) {
       "karma-env-preprocessor",
       "karma-coverage",
       "karma-remap-coverage",
-      "karma-junit-reporter"
+      "karma-junit-reporter",
+      "karma-json-log-reporter"
     ],
 
     // list of files / patterns to load in the browser
@@ -52,7 +53,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha", "coverage", "remap-coverage", "junit"],
+    reporters: ["mocha", "coverage", "remap-coverage", "junit", "json-log"],
 
     coverageReporter: { type: "in-memory" },
 
@@ -77,6 +78,8 @@ module.exports = function(config) {
       classNameFormatter: undefined, // function (browser, result) to customize the classname attribute in xml testcase element
       properties: {} // key value pair of properties to add to the <properties> section of the report
     },
+
+    jsonLogReporter: {},
 
     // web server port
     port: 9328,
